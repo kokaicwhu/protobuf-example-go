@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"protobuf-example-go/hello"
+	"protobuf-example-go/proto/complexpb"
 	"protobuf-example-go/proto/enumpb"
 	simplepb "protobuf-example-go/proto/simple"
 
@@ -30,6 +31,8 @@ func main() {
 	fmt.Println("Successfully create the simple3:", simple3)
 
 	doEnum()
+
+	doComplex()
 }
 
 func writeToFile(fname string, pb proto.Message) error {
@@ -97,4 +100,25 @@ func doEnum() {
 	}
 
 	fmt.Println(em)
+}
+
+func doComplex() {
+	cm := complexpb.ComplexMessage{
+		One: &complexpb.DummyMessage{
+			Id:   1,
+			Name: "First message",
+		},
+		Multiples: []*complexpb.DummyMessage{
+			&complexpb.DummyMessage{
+				Id:   2,
+				Name: "Second message",
+			},
+			&complexpb.DummyMessage{
+				Id:   3,
+				Name: "Third message",
+			},
+		},
+	}
+
+	fmt.Println(cm)
 }
