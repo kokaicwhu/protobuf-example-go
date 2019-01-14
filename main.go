@@ -7,6 +7,7 @@ import (
 	"protobuf-example-go/hello"
 	simplepb "protobuf-example-go/proto/simple"
 
+	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -19,8 +20,13 @@ func main() {
 
 	simple2 := &simplepb.SimpleMessage{}
 	readFromFile("simple.bin", simple2)
-	fmt.Println(simple2)
 
+	simple2Text := toJSON(simple2)
+	fmt.Println(simple2Text)
+
+	simple3 := &simplepb.SimpleMessage{}
+	fromJSON(simple2Text, simple3)
+	fmt.Println("Successfully create the simple3:", simple3)
 }
 
 func writeToFile(fname string, pb proto.Message) error {
@@ -63,4 +69,20 @@ func doSimple() *simplepb.SimpleMessage {
 	}
 
 	return &simple
+}
+
+func toJSON(pb proto.Message) string {
+	marshaler := jsonpb.Marshaler{}
+	out, err := marshaler.MarshalToString(pb)
+	if err != nil {
+		log.Fatalln("Cannot convert ot JSON", err)
+	}
+
+	return out
+}
+
+func fromJSON(in string, pb proto.Message) {
+	if err := jsonpb.UnmarshalString(in, pb); err != nil {
+		log.Fatalln("Cannot unmarshal the JSON into the pb strcut", err)
+	}
 }
