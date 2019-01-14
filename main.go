@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"protobuf-example-go/hello"
+	"protobuf-example-go/proto/enumpb"
 	simplepb "protobuf-example-go/proto/simple"
 
 	"github.com/golang/protobuf/jsonpb"
@@ -27,6 +28,8 @@ func main() {
 	simple3 := &simplepb.SimpleMessage{}
 	fromJSON(simple2Text, simple3)
 	fmt.Println("Successfully create the simple3:", simple3)
+
+	doEnum()
 }
 
 func writeToFile(fname string, pb proto.Message) error {
@@ -85,4 +88,13 @@ func fromJSON(in string, pb proto.Message) {
 	if err := jsonpb.UnmarshalString(in, pb); err != nil {
 		log.Fatalln("Cannot unmarshal the JSON into the pb strcut", err)
 	}
+}
+
+func doEnum() {
+	em := enumpb.EnumMessage{
+		Id:  42,
+		Day: enumpb.DayOfTheWeek_FRIDAY,
+	}
+
+	fmt.Println(em)
 }
